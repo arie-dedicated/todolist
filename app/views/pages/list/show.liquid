@@ -26,7 +26,6 @@
 </div>
 
 <div class="border-t border-gray-400 my-8"></div>
-
 <div x-data="{ open: false }">
   <button class="button-primary"
     @click.prevent="open = !open"
@@ -45,7 +44,6 @@
 </div>
 
 {% if items.size > 0 %}
-
 <table class="w-full mt-8">
   <thead>
     <tr>
@@ -57,35 +55,17 @@
   <tbody>
     {% for item in items %}
     <tr>
-
       <td>
-        <form
-          action="/item/update/{{ item.id }}"
-          method="POST"
-          class="text-center">
-          <input type="hidden" name="completed" value="0">
-          <input
-            type="checkbox"
-            name="completed"
-            value="1"
-            onchange="this.form.submit()"
-            class="w-8 h-8"
-            {% if item.completed == true %}checked{% endif %}
-          />
-          <input type="hidden" name="list_id" value="{{ list.id }}">
-        </form>
+       <input type="checkbox" name="item_id[]" class="w-8 h-8 item-selection" onclick="javascript:item_select(this)" value="{{ item.id }}" />
         </td>
-
         <td x-data="{ open: false }" class="flex items-center">
           <span x-show="open !== true">{{ item.content }}</span>
-
           <button
             @click.prevent="open = !open"
             x-show="open !== true"
             class="ml-auto">
             Edit
           </button>
-
           <form
             method="POST"
             action="/item/update/{{ item.id }}"
@@ -106,6 +86,15 @@
       </td>
     </tr>
     {% endfor %}
+    <tr>
+      <td colspan="4">
+        <form action="/item/delete_selected" method="POST" >
+          <input type="hidden" name="list_id" value="{{ list.id }}">
+         <input type="hidden" name="id_list" id="daftar_list"></div>
+          <button type="submit">Delete all selected</button>
+        </form>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -128,3 +117,15 @@
 This list has been deleted.
 
 {% endunless %}
+
+<script>
+  var ids = [];
+  function item_select(obj) {
+    if (obj.checked) {
+      ids.push(obj.value);
+    } else {
+      ids.pop(obj.value);
+    }
+    document.getElementById('daftar_list').value = ids;
+  }
+</script>

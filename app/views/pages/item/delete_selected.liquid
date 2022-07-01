@@ -1,0 +1,17 @@
+---
+method: post
+---
+{% liquid
+    assign list_id = context.params.list_id
+    assign id_list = context.params.id_list | split: ","
+    graphql result = 'item/delete_all', id: id_list
+    assign list = result | fetch: "records_delete_all"
+  %}
+
+  {% if list.count %}
+  <script>window.location.href = '/list/show/{{list_id}}';</script>
+  {% else %}
+  Something went wrong :(
+  <br>
+  {{ result.errors }}
+  {% endif %}

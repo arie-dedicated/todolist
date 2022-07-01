@@ -1,0 +1,8 @@
+mutation delete_item($id: [ID]!) {
+  records_delete_all(
+    filter: {table: {value: "item"}, id: {value_in: $id}}
+    table: "item"
+  ) {
+    count
+  }
+}
