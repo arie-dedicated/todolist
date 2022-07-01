@@ -1,0 +1,31 @@
+{% graphql lists = 'index' | fetch: 'models' | fetch: 'results' %}
+
+{% if lists.size > 0 %}
+  <ol>
+    {% for list in lists %}
+      <li>
+        <a href="/list/show/{{ list.id }}">{{ list.title }}</a>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <p>There are no lists yet. You can create the first one!</p>
+{% endif %}
+
+<div x-data="{ open: false }">
+  <button
+    @click.prevent="open = !open"
+    x-show="open !== true"
+    class="button-primary">
+    New list
+  </button>
+
+  <form
+    action="/list/create"
+    method="POST"
+    x-show="open === true">
+    <input type="text" name="title" placeholder="List title" required>
+    <button class="button-primary">Create</button>
+    <button @click.prevent="open = false">Cancel</button>
+  </form>
+</div>

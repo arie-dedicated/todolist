@@ -1,0 +1,25 @@
+---
+method: post
+---
+{%- assign id = context.params.slug3 -%}
+{%- assign content = context.params.content -%}
+
+{% if context.params.completed %}
+  <!--
+    "1" (string) comes in, true (boolean) comes out.
+  -->
+  {%- assign completed = context.params.completed | matches: '1' -%}
+  {% graphql result = 'item/update_completed', id: id, completed: completed %}
+{% else if content.size > 0 %}
+  {% graphql result = 'item/update_content', id: id, content: content %}
+{% endif %}
+
+{% assign item = result | fetch: "model_update" %}
+
+{% if item.id %}
+<script>window.location.href = '/list/show/{{ context.params.list_id }}';</script>
+{% else %}
+Something went wrong :(
+<br>
+{{ result.errors }}
+{% endif %}
